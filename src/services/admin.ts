@@ -8,42 +8,46 @@ import { QUERIES } from "./db/queries.js";
 import env from "../config.js";
 import { AdminExists, NotFound, WrongPassword } from "./error.js";
 
+// Fetch admin by email
 export const getAdminByEmail = async (email: string) => {
   const result = (await client.query(QUERIES.fetchAdminByEmailQuery, [email]))
     .rows;
   return result;
 };
 
+// Login
 export const login = async (loginCredentials: LoginAuthSchema) => {
   const { email, password } = loginCredentials;
 
   try {
-    const user = await getAdminByEmail(email);
-    if (user.length === 0) {
-      throw new NotFound("User doesn't exists.");
+    const admin = await getAdminByEmail(email);
+    if (admin.length === 0) {
+      throw new NotFound("Admin doesn't exist");
     }
-    const isPasswordMatch = await bcrypt.compare(password, user[0].password);
+    const isPasswordMatch = await bcrypt.compare(password, admin[0].password);
     if (!isPasswordMatch) throw new WrongPassword("Invalid Credentials");
-    return user[0].id;
+    return admin[0].id;
   } catch (e) {
     throw e;
   }
 };
 
-export const updateProfile = async (userId: string, userName: string) => {
-  try {
-    const isUserExists = (
-      await client.query(QUERIES.checkAdminByIdQuery, [userId])
-    ).rows[0].exists;
+// Update profile
+// export const updateProfile = async (adminId: string, userName: string) => {
+//   try {
+//     const isAdminExists = (
+//       await client.query(QUERIES.checkAdminByIdQuery, [adminId])
+//     ).rows[0].exists;
 
-    if (!isUserExists) throw new NotFound("User doesn't exists");
+//     if (!isAdminExists) throw new NotFound("Admin doesn't exist");
 
-    await client.query(QUERIES.updateProfileQuery, [userId, userName]);
-  } catch (e) {
-    throw e;
-  }
-};
+//     await client.query(QUERIES.updateProfileQuery, [adminId, userName]);
+//   } catch (e) {
+//     throw e;
+//   }
+// };
 
+// Change password
 export const changePassword = async (
   email: string,
   passwordDetails: ChangePasswordSchema
@@ -51,9 +55,9 @@ export const changePassword = async (
   const { newPassword } = passwordDetails;
 
   try {
-    const user = await getAdminByEmail(email);
-    if (user.length === 0) {
-      throw new NotFound("User doesn't exists.");
+    const admin = await getAdminByEmail(email);
+    if (admin.length === 0) {
+      throw new NotFound("Admin doesn't exists.");
     }
     const newHashPassword = await bcrypt.hash(newPassword, 10);
     await client.query(QUERIES.updatePasswordQuery, [email, newHashPassword]);
@@ -62,14 +66,15 @@ export const changePassword = async (
   }
 };
 
-export const getProfile = async (userId: string) => {
+// Fetch admin details
+export const getProfile = async (adminId: string) => {
   try {
-    const isUserExists = (
-      await client.query(QUERIES.checkAdminByIdQuery, [userId])
+    const isAdminExists = (
+      await client.query(QUERIES.checkAdminByIdQuery, [adminId])
     ).rows[0].exists;
 
-    if (!isUserExists) throw new NotFound("User doesn't exists");
-    const result = (await client.query(QUERIES.fetchAdminByIdQuery, [userId]))
+    if (!isAdminExists) throw new NotFound("Admin doesn't exist");
+    const result = (await client.query(QUERIES.fetchAdminByIdQuery, [adminId]))
       .rows[0];
 
     return result;
