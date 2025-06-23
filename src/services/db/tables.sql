@@ -1,9 +1,27 @@
 create type gender_enum as enum ('male', 'female', 'Others');
 create type payment_type_enum as enum ('Online', 'Cash');
 create type payment_status_enum as enum ('success', 'failure');
-create type case_type_enum as enum ('');
-create type treatment_type_enum as enum ('');
+create type case_type_enum as enum (
+    'musculoskeletal',
+    'neurological',
+    'cardiopulmonary',
+    'sports_injury',
+    'post_surgical',
+    'pediatric',
+    'geriatric',
+    'women_health'
+);
 
+create type treatment_type_enum as enum (
+    'manual_therapy',
+    'exercise_therapy',
+    'electrotherapy',
+    'dry_needling',
+    'kinesio_taping',
+    'postural_training',
+    'gait_training',
+    'respiratory_therapy'
+);
 
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
@@ -21,7 +39,7 @@ create table if not exists patients (
     id serial primary key,
     patient_name varchar(50),
     patient_age int,
-    patient_gender gender_enum default 'male'
+    patient_gender gender_enum default 'male',
     patient_address text
 );
 
