@@ -8,12 +8,14 @@ import { QUERIES } from "./db/queries.js";
 import env from "../config.js";
 import { AdminExists, NotFound, WrongPassword } from "./error.js";
 
+// Fetch admin by email
 export const getAdminByEmail = async (email: string) => {
   const result = (await client.query(QUERIES.fetchAdminByEmailQuery, [email]))
     .rows;
   return result;
 };
 
+// Login
 export const login = async (loginCredentials: LoginAuthSchema) => {
   const { email, password } = loginCredentials;
 
@@ -30,7 +32,7 @@ export const login = async (loginCredentials: LoginAuthSchema) => {
   }
 };
 
-// Update profile service function
+// Update profile
 // export const updateProfile = async (adminId: string, userName: string) => {
 //   try {
 //     const isAdminExists = (
@@ -45,7 +47,7 @@ export const login = async (loginCredentials: LoginAuthSchema) => {
 //   }
 // };
 
-// Change password service function
+// Change password
 export const changePassword = async (
   email: string,
   passwordDetails: ChangePasswordSchema
@@ -64,13 +66,14 @@ export const changePassword = async (
   }
 };
 
+// Fetch admin details
 export const getProfile = async (adminId: string) => {
   try {
-    const isUserExists = (
+    const isAdminExists = (
       await client.query(QUERIES.checkAdminByIdQuery, [adminId])
     ).rows[0].exists;
 
-    if (!isUserExists) throw new NotFound("User doesn't exists");
+    if (!isAdminExists) throw new NotFound("Admin doesn't exist");
     const result = (await client.query(QUERIES.fetchAdminByIdQuery, [adminId]))
       .rows[0];
 

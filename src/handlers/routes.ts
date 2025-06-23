@@ -80,7 +80,7 @@ router.put(
   })
 );
 
-// Get admin details
+// Get admin details API
 router.get(
   "/admin/:adminId",
   defineRoute(async (req, res) => {
