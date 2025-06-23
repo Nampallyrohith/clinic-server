@@ -11,7 +11,6 @@ create type case_type_enum as enum (
     'geriatric',
     'women_health'
 );
-
 create type treatment_type_enum as enum (
     'manual_therapy',
     'exercise_therapy',
