@@ -30,6 +30,13 @@ export const QUERIES = {
       SELECT 1 FROM cases WHERE id=$1
     );
   `,
+
+  fetchPatientsDropdownQuery: `
+    SELECT id AS "patientId", 
+           patient_name AS "patientName",
+           mobile AS "mobileNo"
+    FROM patients;
+  `,
   // POST
   insertAdminQuery: `
     INSERT INTO admin (user_name, email, password) 

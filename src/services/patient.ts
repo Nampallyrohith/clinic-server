@@ -92,3 +92,12 @@ export const addNewPatient = async (patientDetails: AddPatientSchema) => {
     throw e;
   }
 };
+
+export const patientsDropdown = async () => {
+  try {
+    const result = await client.query(QUERIES.fetchPatientsDropdownQuery);
+    return result;
+  } catch (e) {
+    throw e;
+  }
+};

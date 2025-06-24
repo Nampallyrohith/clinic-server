@@ -17,6 +17,7 @@ import {
   addCaseDetailsOfPatientById,
   addNewPatient,
   addVisitsDetailsOfPatientByCaseId,
+  patientsDropdown,
 } from "../services/patient.js";
 
 export type RouteHandler = (req: Request, res: Response) => void;
@@ -123,6 +124,9 @@ router.post(
     const patientDetails = addNewPatientBody.parse(req.body);
     try {
       await addNewPatient(patientDetails);
+      res.status(200).send({
+        message: "Added new patient successfully",
+      });
     } catch (e: any) {
       if (e instanceof InvalidPatientId) {
         res.status(400).send({ error: e.message });
@@ -149,6 +153,9 @@ router.post(
         caseDetails.caseDescription,
         caseDetails.treatmentType
       );
+      res.status(200).send({
+        message: "Added new case details successfully",
+      });
     } catch (e: any) {
       if (e instanceof InvalidPatientId) {
         res.status(400).send({ error: e.message });
@@ -173,6 +180,9 @@ router.post(
         visitDetails.paymentType,
         visitDetails.paymentStatus
       );
+      res.status(200).send({
+        message: "Added new patient visits successfully",
+      });
     } catch (e: any) {
       if (e instanceof InvalidCaseId) {
         res.status(400).send({ error: e.message });
@@ -182,3 +192,22 @@ router.post(
     }
   })
 );
+
+// patient options
+router.get(
+  "/patients-dropdown",
+  defineRoute(async (req, res) => {
+    try {
+      const response = await patientsDropdown();
+      res.status(200).send({
+        message: "Patients retreived successfully",
+        patientsDropdown: response,
+      });
+    } catch (e: any) {
+      console.log(e);
+      res.status(500).send({ error: "Something went wrong!" });
+    }
+  })
+);
+// patient details
+// patient daily wise details
