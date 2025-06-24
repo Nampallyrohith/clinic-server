@@ -3,20 +3,60 @@ import { client } from "./db/client.js";
 import { QUERIES } from "./db/queries.js";
 import { InvalidCaseId, InvalidPatientId } from "./error.js";
 
+export const addNewPatient = async (patientDetails: AddPatientSchema) => {
+  try {
+    await client.query("BEGIN");
+
+    const patientId = (
+      await client.query(QUERIES.insertPatientAndReturnIdQuery, [
+        patientDetails.patientName,
+        patientDetails.patientAge,
+        patientDetails.patientGender,
+        patientDetails.mobile,
+        patientDetails.patientAddress,
+      ])
+    ).rows[0].id;
+
+    await client.query("COMMIT");
+
+    await addCaseDetailsOfPatientById(
+      patientId,
+      patientDetails.caseType,
+      patientDetails.caseDescription,
+      patientDetails.treatmentType,
+      patientDetails.date,
+      patientDetails.amount,
+      patientDetails.paymentType,
+      patientDetails.paymentStatus
+    );
+
+    await client.query("COMMIT");
+  } catch (e) {
+    await client.query("ROLLBACK");
+    throw e;
+  }
+};
+
 export const addCaseDetailsOfPatientById = async (
   patientId: string,
   caseType: string,
   caseDescription: string,
-  treatmentType: string
+  treatmentType: string,
+  visitDate: string,
+  amount: number,
+  paymentType: string,
+  paymentStatus: string
 ) => {
   try {
+    await client.query("BEGIN");
+
     const isPatientExists = await client.query(
       QUERIES.checkPatientExistsByIdQuery,
       [patientId]
     );
     if (!isPatientExists.rows[0].EXISTS)
       throw new InvalidPatientId("Invalid Patient Id");
-    const id = (
+    const caseId = (
       await client.query(QUERIES.insertCaseDetailsByPatientIdQuery, [
         patientId,
         caseType,
@@ -24,8 +64,20 @@ export const addCaseDetailsOfPatientById = async (
         treatmentType,
       ])
     ).rows[0].id;
-    return id;
+
+    await client.query("COMMIT");
+
+    await addVisitsDetailsOfPatientByCaseId(
+      caseId,
+      visitDate,
+      amount,
+      paymentType,
+      paymentStatus
+    );
+
+    await client.query("COMMIT");
   } catch (e) {
+    await client.query("ROLLBACK");
     throw e;
   }
 };
@@ -53,42 +105,6 @@ export const addVisitsDetailsOfPatientByCaseId = async (
       paymentStatus,
     ]);
   } catch (e) {
-    throw e;
-  }
-};
-
-export const addNewPatient = async (patientDetails: AddPatientSchema) => {
-  try {
-    await client.query("BEGIN");
-
-    const patientId = (
-      await client.query(QUERIES.insertPatientAndReturnIdQuery, [
-        patientDetails.patientName,
-        patientDetails.patientAge,
-        patientDetails.patientGender,
-        patientDetails.mobile,
-        patientDetails.patientAddress,
-      ])
-    ).rows[0].id;
-
-    const caseId = await addCaseDetailsOfPatientById(
-      patientId,
-      patientDetails.caseType,
-      patientDetails.caseDescription,
-      patientDetails.treatmentType
-    );
-
-    await addVisitsDetailsOfPatientByCaseId(
-      caseId,
-      patientDetails.date,
-      patientDetails.amount,
-      patientDetails.paymentType,
-      patientDetails.paymentStatus
-    );
-
-    await client.query("COMMIT");
-  } catch (e) {
-    await client.query("ROLLBACK");
     throw e;
   }
 };

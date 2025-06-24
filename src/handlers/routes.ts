@@ -153,7 +153,11 @@ router.post(
         patientId,
         caseDetails.caseType,
         caseDetails.caseDescription,
-        caseDetails.treatmentType
+        caseDetails.treatmentType,
+        caseDetails.date,
+        caseDetails.amount,
+        caseDetails.paymentType,
+        caseDetails.paymentStatus
       );
       res.status(200).send({
         message: "Added new case details successfully",
