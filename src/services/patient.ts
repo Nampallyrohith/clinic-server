@@ -10,7 +10,7 @@ export const addNewPatient = async (patientDetails: AddPatientSchema) => {
     const patientId = (
       await client.query(QUERIES.insertPatientAndReturnIdQuery, [
         patientDetails.patientName,
-        patientDetails.patientAge,
+        Number(patientDetails.patientAge),
         patientDetails.patientGender,
         patientDetails.mobile,
         patientDetails.patientAddress,
@@ -24,10 +24,9 @@ export const addNewPatient = async (patientDetails: AddPatientSchema) => {
       patientDetails.caseType,
       patientDetails.caseDescription,
       patientDetails.treatmentType,
-      patientDetails.date,
+      patientDetails.visitDate,
       patientDetails.amount,
-      patientDetails.paymentType,
-      patientDetails.paymentStatus
+      patientDetails.paymentType
     );
 
     await client.query("COMMIT");
@@ -44,8 +43,7 @@ export const addCaseDetailsOfPatientById = async (
   treatmentType: string,
   visitDate: string,
   amount: number,
-  paymentType: string,
-  paymentStatus: string
+  paymentType: string
 ) => {
   try {
     await client.query("BEGIN");
@@ -54,8 +52,10 @@ export const addCaseDetailsOfPatientById = async (
       QUERIES.checkPatientExistsByIdQuery,
       [patientId]
     );
-    if (!isPatientExists.rows[0].EXISTS)
+
+    if (!isPatientExists.rows[0].exists)
       throw new InvalidPatientId("Invalid Patient Id");
+
     const caseId = (
       await client.query(QUERIES.insertCaseDetailsByPatientIdQuery, [
         patientId,
@@ -71,8 +71,7 @@ export const addCaseDetailsOfPatientById = async (
       caseId,
       visitDate,
       amount,
-      paymentType,
-      paymentStatus
+      paymentType
     );
 
     await client.query("COMMIT");
@@ -86,15 +85,14 @@ export const addVisitsDetailsOfPatientByCaseId = async (
   caseId: number,
   visitDate: string,
   amount: number,
-  paymentType: string,
-  paymentStatus: string
+  paymentType: string
 ) => {
   try {
     const isCasesExists = await client.query(
       QUERIES.checkCaseExistsByCaseIdQuery,
       [caseId]
     );
-    if (!isCasesExists.rows[0].EXISTS)
+    if (!isCasesExists.rows[0].exists)
       throw new InvalidCaseId("Invalid case Id");
 
     await client.query(QUERIES.insertVisitDetailsByCaseIdQuery, [
@@ -102,7 +100,6 @@ export const addVisitsDetailsOfPatientByCaseId = async (
       visitDate,
       amount,
       paymentType,
-      paymentStatus,
     ]);
   } catch (e) {
     throw e;

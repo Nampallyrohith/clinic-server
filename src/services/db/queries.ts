@@ -60,7 +60,6 @@ export const QUERIES = {
                 'visitDate', v.visit_date,
                 'paidAmount', v.amount,
                 'paymentType', v.payment_type,
-                'paymentStatus', v.payment_status
               ) ORDER BY v.visit_date
             )
             FROM visits v
@@ -97,7 +96,6 @@ export const QUERIES = {
                   'visitDate', v.visit_date,
                   'paidAmount', v.amount,
                   'paymentType', v.payment_type,
-                  'paymentStatus', v.payment_status
                 ) ORDER BY v.visit_date
               )
               FROM visits v
@@ -119,7 +117,7 @@ export const QUERIES = {
 
   insertPatientAndReturnIdQuery: `
     INSERT INTO patients (patient_name, patient_age, patient_gender, mobile, patient_address)
-    VALUES($1, $2, $3, $4) RETURNING id;
+    VALUES($1, $2, $3, $4, $5) RETURNING id;
   `,
 
   insertCaseDetailsByPatientIdQuery: `
@@ -128,8 +126,8 @@ export const QUERIES = {
   `,
 
   insertVisitDetailsByCaseIdQuery: `
-    INSERT INTO visits (case_id, visit_date, amount, payment_type, payment_status )
-    VALUES ($1, $2, $3, $4, $5);
+    INSERT INTO visits (case_id, visit_date, amount, payment_type )
+    VALUES ($1, $2, $3, $4);
   `,
 
   // PUT

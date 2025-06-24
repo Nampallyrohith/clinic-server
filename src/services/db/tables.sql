@@ -1,25 +1,49 @@
-create type gender_enum as enum ('male', 'female', 'Others');
+create type gender_enum as enum ('Male', 'Female', 'Others');
 create type payment_type_enum as enum ('Online', 'Cash');
-create type payment_status_enum as enum ('success', 'failure');
 create type case_type_enum as enum (
-    'musculoskeletal',
-    'neurological',
-    'cardiopulmonary',
-    'sports_injury',
-    'post_surgical',
-    'pediatric',
-    'geriatric',
-    'women_health'
+    'frozen_shoulder',
+    'osteo_arthritis',
+    'cervical_spondylitis',
+    'low_back_ache',
+    'hemiplegia',
+    'bells_palsy',
+    'sciatica',
+    'fractures',
+    'knee_replacement',
+    'ligament_injuries',
+    'ligament_surgeries',
+    'delayed_milestones',
+    'bow_legs',
+    'cerebral_palsy',
+    'plantar_fasciitis',
+    'calcaneal_spur',
+    'bursitis',
+    'nerve_injuries',
+    'prenatal_postnatal_care',
+    'cardiac_rehab',
+    'tennis_elbow',
+    'golfers_elbow',
+    'tendinitis',
+    'sprains',
+    'strains',
+    'dislocations',
+    'muscle_contusion'
 );
 create type treatment_type_enum as enum (
-    'manual_therapy',
-    'exercise_therapy',
-    'electrotherapy',
-    'dry_needling',
-    'kinesio_taping',
-    'postural_training',
-    'gait_training',
-    'respiratory_therapy'
+    'ift',
+    'tens',
+    'ultrasound',
+    'hot_pack',
+    'wax',
+    'dryneedling',
+    'cupping',
+    'mobilisations',
+    'stretchings',
+    'stimulations',
+    'exercises',
+    'traction',
+    'taping',
+    'passive_movements'
 );
 
 
@@ -38,8 +62,8 @@ create table if not exists patients (
     id VARCHAR(10) primary key,
     patient_name varchar(50) UNIQUE,
     patient_age int,
-    mobile varchar(12),
-    patient_gender gender_enum default 'male',
+    mobile varchar(10),
+    patient_gender gender_enum default 'Male',
     patient_address text,
     created_at timestamptz default current_timestamp
 );
@@ -59,9 +83,9 @@ create table if not exists visits (
     visit_date timestamptz,
     amount int,
     payment_type payment_type_enum,
-    payment_status payment_status_enum
 );
 
+create sequence if not exists patient_seq start 1;
 
 -- Create a trigger function to generate the ID
 CREATE OR REPLACE FUNCTION generate_patient_id()
