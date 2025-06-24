@@ -37,7 +37,7 @@ export const QUERIES = {
   `,
 
   insertPatientAndReturnIdQuery: `
-    INSERT INTO patients (patient_name, patient_age, patient_gender, patient_address)
+    INSERT INTO patients (patient_name, patient_age, patient_gender, mobile, patient_address)
     VALUES($1, $2, $3, $4) RETURNING id;
   `,
 

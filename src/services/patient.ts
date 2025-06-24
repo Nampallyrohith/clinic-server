@@ -66,6 +66,7 @@ export const addNewPatient = async (patientDetails: AddPatientSchema) => {
         patientDetails.patientName,
         patientDetails.patientAge,
         patientDetails.patientGender,
+        patientDetails.mobile,
         patientDetails.patientAddress,
       ])
     ).rows[0].id;

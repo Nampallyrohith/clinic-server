@@ -38,6 +38,7 @@ create table if not exists patients (
     id VARCHAR(10) primary key,
     patient_name varchar(50) UNIQUE,
     patient_age int,
+    mobile varchar(12),
     patient_gender gender_enum default 'male',
     patient_address text,
     created_at timestamptz default current_timestamp
