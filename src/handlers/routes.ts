@@ -17,6 +17,7 @@ import {
   addCaseDetailsOfPatientById,
   addNewPatient,
   addVisitsDetailsOfPatientByCaseId,
+  getPatientsByDate,
   patientDetailsById,
   patientsDropdown,
 } from "../services/patient.js";
@@ -233,3 +234,23 @@ router.get(
   })
 );
 // patient daily wise details
+
+router.get(
+  "/daily-wise-patients/:selectedDate",
+  defineRoute(async (req, res) => {
+    const { selectedDate } = req.params;
+    if (!selectedDate) {
+      res.status(400).send({ error: "Invalid date or undefined." });
+    }
+    try {
+      const response = await getPatientsByDate(selectedDate);
+      res.status(200).send({
+        message: "Date wise patient retreived successfully",
+        dateWisePatients: response,
+      });
+    } catch (e: any) {
+      console.log(e);
+      res.status(500).send({ error: "Something went wrong!" });
+    }
+  })
+);

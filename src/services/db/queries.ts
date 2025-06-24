@@ -73,7 +73,43 @@ export const QUERIES = {
     JOIN cases c ON c.patient_id = p.id
     WHERE p.id = $1
     GROUP BY p.id;
+  `,
 
+  fetchPatientsByDateQuery: `
+    SELECT 
+        p.id AS "patientId",
+        p.patient_name AS "patientName",
+        p.patient_age AS "patientAge",
+        p.mobile AS "mobileNo",
+        p.patient_gender AS "patientGender",
+        p.patient_address AS "patientAddress",
+        p.created_at AS "firstVisitOn",
+
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'caseType', c.case_type,
+            'caseDescription', c.case_description,
+            'treatmentType', c.treatment_type,
+            'caseBookedOn', c.registered_date,
+            'visits', (
+              SELECT JSON_AGG(
+                JSON_BUILD_OBJECT(
+                  'visitDate', v.visit_date,
+                  'paidAmount', v.amount,
+                  'paymentType', v.payment_type,
+                  'paymentStatus', v.payment_status
+                ) ORDER BY v.visit_date
+              )
+              FROM visits v
+              WHERE v.case_id = c.id AND DATE(v.visit_date) = $1
+            )
+          )
+          ORDER BY c.registered_date
+        ) AS "cases"
+
+      FROM patients p
+      JOIN cases c ON c.patient_id = p.id
+      GROUP BY p.id;
   `,
   // POST
   insertAdminQuery: `

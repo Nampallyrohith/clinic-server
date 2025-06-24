@@ -112,3 +112,14 @@ export const patientDetailsById = async (patientId: string) => {
     throw e;
   }
 };
+
+export const getPatientsByDate = async (date: string) => {
+  try {
+    const result = (
+      await client.query(QUERIES.fetchPatientsByDateQuery, [date])
+    ).rows;
+    return result;
+  } catch (e) {
+    throw e;
+  }
+};
