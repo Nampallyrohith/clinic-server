@@ -37,6 +37,44 @@ export const QUERIES = {
            mobile AS "mobileNo"
     FROM patients;
   `,
+
+  fetchPatientDetailsByIdQuery: `
+    SELECT 
+      p.id as "patientId",
+      p.patient_name as "patientName",
+      p.patient_age as "patientAge",
+      p.mobile as "mobileNo",
+      p.patient_gender as "patientGender",
+      p.patient_address as "patientAddress",
+      p.created_at as "firstVisitOn",
+
+      JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'caseType', c.case_type,
+          'caseDescription', c.case_description,
+          'treatmentType', c.treatment_type,
+          'caseBookedOn', c.registered_date,
+          'visits', (
+            SELECT JSON_AGG(
+              JSON_BUILD_OBJECT(
+                'visitDate', v.visit_date,
+                'paidAmount', v.amount,
+                'paymentType', v.payment_type,
+                'paymentStatus', v.payment_status
+              ) ORDER BY v.visit_date
+            )
+            FROM visits v
+            WHERE v.case_id = c.id
+          )
+        ) ORDER BY c.registered_date
+      ) AS "cases"
+
+    FROM patients p
+    JOIN cases c ON c.patient_id = p.id
+    WHERE p.id = $1
+    GROUP BY p.id;
+
+  `,
   // POST
   insertAdminQuery: `
     INSERT INTO admin (user_name, email, password) 

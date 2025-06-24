@@ -101,3 +101,14 @@ export const patientsDropdown = async () => {
     throw e;
   }
 };
+
+export const patientDetailsById = async (patientId: string) => {
+  try {
+    const result = (
+      await client.query(QUERIES.fetchPatientDetailsByIdQuery, [patientId])
+    ).rows[0];
+    return result;
+  } catch (e) {
+    throw e;
+  }
+};

@@ -17,6 +17,7 @@ import {
   addCaseDetailsOfPatientById,
   addNewPatient,
   addVisitsDetailsOfPatientByCaseId,
+  patientDetailsById,
   patientsDropdown,
 } from "../services/patient.js";
 
@@ -209,5 +210,26 @@ router.get(
     }
   })
 );
+
 // patient details
+router.get(
+  "/patient-detials/:patientId",
+  defineRoute(async (req, res) => {
+    const { patientId } = req.params;
+
+    try {
+      const response = await patientDetailsById(patientId);
+      res.status(200).send({
+        message: "Patient details retreived successfully",
+        patientDetails: response,
+      });
+    } catch (e: any) {
+      if (e instanceof InvalidPatientId) {
+        res.status(400).send({ error: e.message });
+      }
+      console.log(e);
+      res.status(500).send({ error: "Something went wrong!" });
+    }
+  })
+);
 // patient daily wise details

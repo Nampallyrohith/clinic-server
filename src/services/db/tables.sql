@@ -46,7 +46,7 @@ create table if not exists patients (
 
 create table if not exists cases (
     id serial primary key,
-    patient_id int references patients(id) on delete cascade,
+    patient_id varchar(10) references patients(id) on delete cascade,
     case_type case_type_enum,
     case_description text,
     treatment_type treatment_type_enum,
