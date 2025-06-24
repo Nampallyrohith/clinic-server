@@ -35,11 +35,12 @@ create table if not exists admin (
 );
 
 create table if not exists patients (
-    id serial primary key,
-    patient_name varchar(50),
+    id VARCHAR(10) primary key,
+    patient_name varchar(50) UNIQUE,
     patient_age int,
     patient_gender gender_enum default 'male',
-    patient_address text
+    patient_address text,
+    created_at timestamptz default current_timestamp
 );
 
 create table if not exists cases (
@@ -59,3 +60,20 @@ create table if not exists visits (
     payment_type payment_type_enum,
     payment_status payment_status_enum
 );
+
+
+-- Create a trigger function to generate the ID
+CREATE OR REPLACE FUNCTION generate_patient_id()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        NEW.id := 'AC' || LPAD(nextval('patient_seq')::TEXT, 3, '0');
+        RETURN NEW;
+    END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger to call the function before insert
+CREATE TRIGGER set_patient_id
+    BEFORE INSERT ON patients
+    FOR EACH ROW
+    WHEN (NEW.id IS NULL)
+EXECUTE FUNCTION generate_patient_id()
