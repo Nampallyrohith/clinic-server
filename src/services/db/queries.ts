@@ -59,7 +59,7 @@ export const QUERIES = {
               JSON_BUILD_OBJECT(
                 'visitDate', v.visit_date,
                 'paidAmount', v.amount,
-                'paymentType', v.payment_type,
+                'paymentType', v.payment_type
               ) ORDER BY v.visit_date
             )
             FROM visits v
@@ -95,7 +95,7 @@ export const QUERIES = {
                 JSON_BUILD_OBJECT(
                   'visitDate', v.visit_date,
                   'paidAmount', v.amount,
-                  'paymentType', v.payment_type,
+                  'paymentType', v.payment_type
                 ) ORDER BY v.visit_date
               )
               FROM visits v
