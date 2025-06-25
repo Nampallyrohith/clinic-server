@@ -21,9 +21,8 @@ export const addNewPatient = async (patientDetails: AddPatientSchema) => {
 
     await addCaseDetailsOfPatientById(
       patientId,
-      patientDetails.caseType,
+      patientDetails.cases,
       patientDetails.caseDescription,
-      patientDetails.treatmentType,
       patientDetails.visitDate,
       patientDetails.visitType,
       patientDetails.amount,
@@ -39,9 +38,11 @@ export const addNewPatient = async (patientDetails: AddPatientSchema) => {
 
 export const addCaseDetailsOfPatientById = async (
   patientId: string,
-  caseType: string,
+  cases: {
+    caseType: string;
+    treatmentType: string;
+  }[],
   caseDescription: string,
-  treatmentType: string,
   visitDate: string,
   visitType: "Home" | "Clinic",
   amount: number,
@@ -55,27 +56,28 @@ export const addCaseDetailsOfPatientById = async (
       [patientId]
     );
 
-    if (!isPatientExists.rows[0].exists)
+    if (!isPatientExists.rows[0]?.exists) {
       throw new InvalidPatientId("Invalid Patient Id");
+    }
 
-    const caseId = (
-      await client.query(QUERIES.insertCaseDetailsByPatientIdQuery, [
-        patientId,
-        caseType,
-        caseDescription,
-        treatmentType,
-      ])
-    ).rows[0].id;
+    for (const c of cases) {
+      const caseResult = await client.query(
+        QUERIES.insertCaseDetailsByPatientIdQuery,
+        [patientId, c.caseType, caseDescription, c.treatmentType]
+      );
 
-    await client.query("COMMIT");
+      const caseId = caseResult.rows[0].id;
 
-    await addVisitsDetailsOfPatientByCaseId(
-      caseId,
-      visitDate,
-      visitType,
-      amount,
-      paymentType
-    );
+      await client.query("COMMIT");
+
+      await addVisitsDetailsOfPatientByCaseId(
+        caseId,
+        visitDate,
+        visitType,
+        amount,
+        paymentType
+      );
+    }
 
     await client.query("COMMIT");
   } catch (e) {

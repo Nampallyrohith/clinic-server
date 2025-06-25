@@ -18,9 +18,13 @@ export const visitDetailsBody = z.object({
 });
 
 export const caseDetailsBody = visitDetailsBody.extend({
-  caseType: z.string().trim().min(1),
+  cases: z.array(
+    z.object({
+      caseType: z.string().trim().min(1),
+      treatmentType: z.string().trim().min(1),
+    })
+  ),
   caseDescription: z.string().trim().min(1),
-  treatmentType: z.string().trim().min(1),
 });
 
 export const addNewPatientBody = patientBody.extend({

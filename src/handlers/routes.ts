@@ -151,9 +151,8 @@ router.post(
     try {
       await addCaseDetailsOfPatientById(
         patientId,
-        caseDetails.caseType,
+        caseDetails.cases,
         caseDetails.caseDescription,
-        caseDetails.treatmentType,
         caseDetails.visitDate,
         caseDetails.visitType,
         caseDetails.amount,
