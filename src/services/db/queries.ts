@@ -58,6 +58,7 @@ export const QUERIES = {
             SELECT JSON_AGG(
               JSON_BUILD_OBJECT(
                 'visitDate', v.visit_date,
+                'visitType', v.visit_type,
                 'paidAmount', v.amount,
                 'paymentType', v.payment_type
               ) ORDER BY v.visit_date
@@ -94,6 +95,7 @@ export const QUERIES = {
               SELECT JSON_AGG(
                 JSON_BUILD_OBJECT(
                   'visitDate', v.visit_date,
+                  'visitType', v.visit_type,
                   'paidAmount', v.amount,
                   'paymentType', v.payment_type
                 ) ORDER BY v.visit_date
@@ -126,8 +128,8 @@ export const QUERIES = {
   `,
 
   insertVisitDetailsByCaseIdQuery: `
-    INSERT INTO visits (case_id, visit_date, amount, payment_type )
-    VALUES ($1, $2, $3, $4);
+    INSERT INTO visits (case_id, visit_date, visit_type, amount, payment_type )
+    VALUES ($1, $2, $3, $4, $5);
   `,
 
   // PUT

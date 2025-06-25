@@ -12,6 +12,7 @@ const patientBody = z.object({
 
 export const visitDetailsBody = z.object({
   visitDate: z.string().trim().min(1),
+  visitType: z.enum(["Home", "Clinic"]),
   paymentType: z.enum(["Online", "Cash"]),
   amount: z.coerce.number(),
 });

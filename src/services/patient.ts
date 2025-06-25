@@ -25,6 +25,7 @@ export const addNewPatient = async (patientDetails: AddPatientSchema) => {
       patientDetails.caseDescription,
       patientDetails.treatmentType,
       patientDetails.visitDate,
+      patientDetails.visitType,
       patientDetails.amount,
       patientDetails.paymentType
     );
@@ -42,6 +43,7 @@ export const addCaseDetailsOfPatientById = async (
   caseDescription: string,
   treatmentType: string,
   visitDate: string,
+  visitType: "Home" | "Clinic",
   amount: number,
   paymentType: string
 ) => {
@@ -70,6 +72,7 @@ export const addCaseDetailsOfPatientById = async (
     await addVisitsDetailsOfPatientByCaseId(
       caseId,
       visitDate,
+      visitType,
       amount,
       paymentType
     );
@@ -84,6 +87,7 @@ export const addCaseDetailsOfPatientById = async (
 export const addVisitsDetailsOfPatientByCaseId = async (
   caseId: number,
   visitDate: string,
+  visitType: "Home" | "Clinic",
   amount: number,
   paymentType: string
 ) => {
@@ -98,6 +102,7 @@ export const addVisitsDetailsOfPatientByCaseId = async (
     await client.query(QUERIES.insertVisitDetailsByCaseIdQuery, [
       caseId,
       visitDate,
+      visitType,
       amount,
       paymentType,
     ]);
