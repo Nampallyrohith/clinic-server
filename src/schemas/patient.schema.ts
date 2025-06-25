@@ -12,8 +12,8 @@ const patientBody = z.object({
 
 export const visitDetailsBody = z.object({
   visitDate: z.string().trim().min(1),
-  visitType: z.enum(["Home", "Clinic"]),
   paymentType: z.enum(["Online", "Cash"]),
+  paymentStatus: z.enum(["paid", "not-paid"]),
   amount: z.coerce.number(),
 });
 
@@ -25,6 +25,7 @@ export const caseDetailsBody = visitDetailsBody.extend({
     })
   ),
   caseDescription: z.string().trim().min(1),
+  visitType: z.enum(["Home", "Clinic", "Consultation"]),
 });
 
 export const addNewPatientBody = patientBody.extend({

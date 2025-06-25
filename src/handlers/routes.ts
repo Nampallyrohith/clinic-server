@@ -156,7 +156,8 @@ router.post(
         caseDetails.visitDate,
         caseDetails.visitType,
         caseDetails.amount,
-        caseDetails.paymentType
+        caseDetails.paymentType,
+        caseDetails.paymentStatus
       );
       res.status(200).send({
         message: "Added new case details successfully",
@@ -181,9 +182,9 @@ router.post(
       await addVisitsDetailsOfPatientByCaseId(
         Number(caseId),
         visitDetails.visitDate,
-        visitDetails.visitType,
         visitDetails.amount,
-        visitDetails.paymentType
+        visitDetails.paymentType,
+        visitDetails.paymentStatus
       );
       res.status(200).send({
         message: "Added new patient visits successfully",

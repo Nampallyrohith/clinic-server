@@ -26,7 +26,8 @@ export const addNewPatient = async (patientDetails: AddPatientSchema) => {
       patientDetails.visitDate,
       patientDetails.visitType,
       patientDetails.amount,
-      patientDetails.paymentType
+      patientDetails.paymentType,
+      patientDetails.paymentStatus
     );
 
     await client.query("COMMIT");
@@ -44,9 +45,10 @@ export const addCaseDetailsOfPatientById = async (
   }[],
   caseDescription: string,
   visitDate: string,
-  visitType: "Home" | "Clinic",
+  visitType: "Home" | "Clinic" | "Consultation",
   amount: number,
-  paymentType: string
+  paymentType: "Online" | "Cash",
+  paymentStatus: "paid" | "not-paid"
 ) => {
   try {
     await client.query("BEGIN");
@@ -63,7 +65,7 @@ export const addCaseDetailsOfPatientById = async (
     for (const c of cases) {
       const caseResult = await client.query(
         QUERIES.insertCaseDetailsByPatientIdQuery,
-        [patientId, c.caseType, caseDescription, c.treatmentType]
+        [patientId, c.caseType, caseDescription, c.treatmentType, visitType]
       );
 
       const caseId = caseResult.rows[0].id;
@@ -73,9 +75,9 @@ export const addCaseDetailsOfPatientById = async (
       await addVisitsDetailsOfPatientByCaseId(
         caseId,
         visitDate,
-        visitType,
         amount,
-        paymentType
+        paymentType,
+        paymentStatus
       );
     }
 
@@ -89,9 +91,9 @@ export const addCaseDetailsOfPatientById = async (
 export const addVisitsDetailsOfPatientByCaseId = async (
   caseId: number,
   visitDate: string,
-  visitType: "Home" | "Clinic",
   amount: number,
-  paymentType: string
+  paymentType: "Online" | "Cash",
+  paymentStatus: "paid" | "not-paid"
 ) => {
   try {
     const isCasesExists = await client.query(
@@ -104,9 +106,9 @@ export const addVisitsDetailsOfPatientByCaseId = async (
     await client.query(QUERIES.insertVisitDetailsByCaseIdQuery, [
       caseId,
       visitDate,
-      visitType,
       amount,
       paymentType,
+      paymentStatus,
     ]);
   } catch (e) {
     throw e;

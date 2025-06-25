@@ -1,6 +1,7 @@
 create type gender_enum as enum ('Male', 'Female', 'Others');
 create type payment_type_enum as enum ('Online', 'Cash');
-create type visit_type_enum as enum('Home', 'Clinic');
+create type payment_status_enum as enum ('paid', 'not-paid');
+create type visit_type_enum as enum('Home', 'Clinic', 'Consultation');
 create type case_type_enum as enum (
     'frozen_shoulder',
     'osteo_arthritis',
@@ -75,6 +76,7 @@ create table if not exists cases (
     case_type case_type_enum,
     case_description text,
     treatment_type treatment_type_enum,
+    visit_type visit_type_enum default 'Clinic',
     registered_date timestamptz default CURRENT_TIMESTAMP
 );
 
@@ -82,9 +84,9 @@ create table if not exists visits (
     id serial primary key,
     case_id int references cases(id) on delete cascade,
     visit_date timestamptz,
-    visit_type visit_type_enum default 'Clinic',
     amount int,
     payment_type payment_type_enum,
+    payment_status payment_status_enum default 'not-paid'
 );
 
 create sequence if not exists patient_seq start 1;

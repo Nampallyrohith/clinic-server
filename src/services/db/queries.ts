@@ -53,14 +53,15 @@ export const QUERIES = {
           'caseType', c.case_type,
           'caseDescription', c.case_description,
           'treatmentType', c.treatment_type,
+          'visitType', c.visit_type,
           'caseBookedOn', c.registered_date,
           'visits', (
             SELECT JSON_AGG(
               JSON_BUILD_OBJECT(
                 'visitDate', v.visit_date,
-                'visitType', v.visit_type,
                 'paidAmount', v.amount,
-                'paymentType', v.payment_type
+                'paymentType', v.payment_type,
+                'paymentStatus', v.payment_status
               ) ORDER BY v.visit_date
             )
             FROM visits v
@@ -90,14 +91,15 @@ export const QUERIES = {
             'caseType', c.case_type,
             'caseDescription', c.case_description,
             'treatmentType', c.treatment_type,
+            'visitType', c.visit_type,
             'caseBookedOn', c.registered_date,
             'visits', (
               SELECT JSON_AGG(
                 JSON_BUILD_OBJECT(
                   'visitDate', v.visit_date,
-                  'visitType', v.visit_type,
                   'paidAmount', v.amount,
-                  'paymentType', v.payment_type
+                  'paymentType', v.payment_type,
+                  'paymentStatus', v.payment_status
                 ) ORDER BY v.visit_date
               )
               FROM visits v
@@ -123,12 +125,12 @@ export const QUERIES = {
   `,
 
   insertCaseDetailsByPatientIdQuery: `
-    INSERT INTO cases (patient_id, case_type, case_description, treatment_type)
-    VALUES($1, $2, $3, $4) RETURNING id;
+    INSERT INTO cases (patient_id, case_type, case_description, treatment_type, visit_type)
+    VALUES($1, $2, $3, $4, $5) RETURNING id;
   `,
 
   insertVisitDetailsByCaseIdQuery: `
-    INSERT INTO visits (case_id, visit_date, visit_type, amount, payment_type )
+    INSERT INTO visits (case_id, visit_date, amount, payment_type, payment_status)
     VALUES ($1, $2, $3, $4, $5);
   `,
 
