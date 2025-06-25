@@ -108,7 +108,8 @@ export const addVisitsDetailsOfPatientByCaseId = async (
 
 export const patientsDropdown = async () => {
   try {
-    const result = await client.query(QUERIES.fetchPatientsDropdownQuery);
+    const result = (await client.query(QUERIES.fetchPatientsDropdownQuery))
+      .rows;
     return result;
   } catch (e) {
     throw e;
