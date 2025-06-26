@@ -50,6 +50,7 @@ export const QUERIES = {
 
       JSON_AGG(
         JSON_BUILD_OBJECT(
+          'caseId', c.id,
           'caseType', c.case_type,
           'caseDescription', c.case_description,
           'treatmentType', c.treatment_type,
@@ -62,7 +63,7 @@ export const QUERIES = {
                 'paidAmount', v.amount,
                 'paymentType', v.payment_type,
                 'paymentStatus', v.payment_status
-              ) ORDER BY v.visit_date
+              ) ORDER BY v.visit_date DESC
             )
             FROM visits v
             WHERE v.case_id = c.id
