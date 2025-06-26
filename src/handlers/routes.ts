@@ -218,7 +218,7 @@ router.get(
 
 // patient details
 router.get(
-  "/patient-detials/:patientId",
+  "/patient-details/:patientId",
   defineRoute(async (req, res) => {
     const { patientId } = req.params;
 
