@@ -101,7 +101,7 @@ export const QUERIES = {
                   'paidAmount', v.amount,
                   'paymentType', v.payment_type,
                   'paymentStatus', v.payment_status
-                ) ORDER BY v.visit_date
+                ) ORDER BY v.visit_date DESC
               )
               FROM visits v
               WHERE v.case_id = c.id AND DATE(v.visit_date) = $1
