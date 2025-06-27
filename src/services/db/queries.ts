@@ -112,6 +112,10 @@ export const QUERIES = {
 
       FROM patients p
       JOIN cases c ON c.patient_id = p.id
+      WHERE EXISTS (
+        SELECT 1 FROM visits v 
+        WHERE v.case_id = c.id AND DATE(v.visit_date) = $1
+      )
       GROUP BY p.id;
   `,
   // POST
