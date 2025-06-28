@@ -5,8 +5,7 @@ import {
 import bcrypt from "bcrypt";
 import { client } from "./db/client.js";
 import { QUERIES } from "./db/queries.js";
-import env from "../config.js";
-import { AdminExists, NotFound, WrongPassword } from "./error.js";
+import { NotFound, WrongPassword } from "./error.js";
 
 // Fetch admin by email
 export const getAdminByEmail = async (email: string) => {
