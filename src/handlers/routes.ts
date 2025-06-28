@@ -237,8 +237,8 @@ router.get(
     }
   })
 );
-// patient daily wise details
 
+// patient daily wise details
 router.get(
   "/daily-wise-patients/:selectedDate",
   defineRoute(async (req, res) => {
