@@ -42,7 +42,7 @@ export const QUERIES = {
     SELECT 
       p.id as "patientId",
       p.patient_name as "patientName",
-      p.patient_age as "patientAge",
+      p.patient_dob as "patientDOB",
       p.mobile as "mobileNo",
       p.patient_gender as "patientGender",
       p.patient_address as "patientAddress",
@@ -82,7 +82,7 @@ export const QUERIES = {
     SELECT 
         p.id AS "patientId",
         p.patient_name AS "patientName",
-        p.patient_age AS "patientAge",
+        p.patient_dob AS "patientDOB",
         p.mobile AS "mobileNo",
         p.patient_gender AS "patientGender",
         p.patient_address AS "patientAddress",
@@ -126,7 +126,7 @@ export const QUERIES = {
   `,
 
   insertPatientAndReturnIdQuery: `
-    INSERT INTO patients (patient_name, patient_age, patient_gender, mobile, patient_address)
+    INSERT INTO patients (patient_name, patient_dob, patient_gender, mobile, patient_address)
     VALUES($1, $2, $3, $4, $5) RETURNING id;
   `,
 

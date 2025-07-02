@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const patientBody = z.object({
   patientName: z.string().trim().min(1),
-  patientAge: z.string().trim().min(1),
+  patientDOB: z.string().trim().min(1),
   patientGender: z.enum(["Male", "Female", "Others"]),
   mobile: z
     .string()

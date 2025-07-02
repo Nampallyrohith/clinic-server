@@ -10,7 +10,7 @@ export const addNewPatient = async (patientDetails: AddPatientSchema) => {
     const patientId = (
       await client.query(QUERIES.insertPatientAndReturnIdQuery, [
         patientDetails.patientName,
-        Number(patientDetails.patientAge),
+        patientDetails.patientDOB,
         patientDetails.patientGender,
         patientDetails.mobile,
         patientDetails.patientAddress,

@@ -63,7 +63,7 @@ create table if not exists admin (
 create table if not exists patients (
     id VARCHAR(10) primary key,
     patient_name varchar(50),
-    patient_age int,
+    patient_dob date,
     mobile varchar(10),
     patient_gender gender_enum default 'Male',
     patient_address text,
