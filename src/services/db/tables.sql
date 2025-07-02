@@ -77,6 +77,7 @@ create table if not exists cases (
     case_description text,
     treatment_type treatment_type_enum,
     visit_type visit_type_enum default 'Clinic',
+    is_case_open boolean default TRUE,
     registered_date timestamptz default CURRENT_TIMESTAMP
 );
 

@@ -55,6 +55,7 @@ export const QUERIES = {
           'caseDescription', c.case_description,
           'treatmentType', c.treatment_type,
           'visitType', c.visit_type,
+          'isCaseOpen', c.is_case_open,
           'caseBookedOn', c.registered_date,
           'visits', (
             SELECT JSON_AGG(
