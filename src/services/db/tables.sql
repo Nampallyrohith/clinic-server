@@ -90,9 +90,43 @@ create table if not exists visits (
     payment_status payment_status_enum default 'not-paid'
 );
 
-create sequence if not exists patient_seq start 1;
-
 -- Create a trigger function to generate the ID
+-- Case id
+create sequence if not exists case_seq start 1;
+CREATE OR REPLACE FUNCTION generate_case_id()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        NEW.id := 'CS' || LPAD(nextval('case_seq')::TEXT, 3, '0');
+        RETURN NEW;
+    END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger to call the function before insert
+CREATE TRIGGER set_case_id
+    BEFORE INSERT ON cases
+    FOR EACH ROW
+    WHEN (NEW.id IS NULL)
+EXECUTE FUNCTION generate_case_id()
+
+-- Visit ids generation
+create sequence if not exists visit_seq start 1;
+CREATE OR REPLACE FUNCTION generate_visit_id()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        NEW.id := 'VT' || LPAD(nextval('visit_seq')::TEXT, 3, '0');
+        RETURN NEW;
+    END;
+$$ LANGUAGE plpgsql;
+
+-- Create a trigger to call the function before insert
+CREATE TRIGGER set_visit_id
+    BEFORE INSERT ON visits
+    FOR EACH ROW
+    WHEN (NEW.id IS NULL)
+EXECUTE FUNCTION generate_visit_id()
+
+-- Patient ids generation
+create sequence if not exists patient_seq start 1;
 CREATE OR REPLACE FUNCTION generate_patient_id()
     RETURNS TRIGGER AS $$
     BEGIN
