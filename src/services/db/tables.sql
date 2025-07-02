@@ -71,7 +71,7 @@ create table if not exists patients (
 );
 
 create table if not exists cases (
-    id serial primary key,
+    id VARCHAR(10) primary key,
     patient_id varchar(10) references patients(id) on delete cascade,
     case_type case_type_enum,
     case_description text,
@@ -82,8 +82,8 @@ create table if not exists cases (
 );
 
 create table if not exists visits (
-    id serial primary key,
-    case_id int references cases(id) on delete cascade,
+    id VARCHAR(10) primary key,
+    case_id VARCHAR(10) references cases(id) on delete cascade,
     visit_date timestamptz,
     amount int,
     payment_type payment_type_enum,
@@ -106,7 +106,7 @@ CREATE TRIGGER set_case_id
     BEFORE INSERT ON cases
     FOR EACH ROW
     WHEN (NEW.id IS NULL)
-EXECUTE FUNCTION generate_case_id()
+EXECUTE FUNCTION generate_case_id();
 
 -- Visit ids generation
 create sequence if not exists visit_seq start 1;
@@ -123,7 +123,7 @@ CREATE TRIGGER set_visit_id
     BEFORE INSERT ON visits
     FOR EACH ROW
     WHEN (NEW.id IS NULL)
-EXECUTE FUNCTION generate_visit_id()
+EXECUTE FUNCTION generate_visit_id();
 
 -- Patient ids generation
 create sequence if not exists patient_seq start 1;
@@ -140,4 +140,4 @@ CREATE TRIGGER set_patient_id
     BEFORE INSERT ON patients
     FOR EACH ROW
     WHEN (NEW.id IS NULL)
-EXECUTE FUNCTION generate_patient_id()
+EXECUTE FUNCTION generate_patient_id();
