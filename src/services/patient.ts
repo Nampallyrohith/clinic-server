@@ -146,3 +146,20 @@ export const getPatientsByDate = async (date: string) => {
     throw e;
   }
 };
+
+export const updateCaseStatus = async (caseId: string, isCaseOpen: boolean) => {
+  try {
+    const isCaseExists = await client.query(
+      QUERIES.checkCaseExistsByCaseIdQuery,
+      [caseId]
+    );
+
+    if (!isCaseExists.rows[0].exists) {
+      throw new InvalidCaseId("Invalid case Id");
+    }
+
+    await client.query(QUERIES.updateCaseStatusQuery, [caseId, isCaseOpen]);
+  } catch (e) {
+    throw e;
+  }
+};

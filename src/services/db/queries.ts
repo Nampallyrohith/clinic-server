@@ -152,4 +152,10 @@ export const QUERIES = {
       SET password=$2
     WHERE email=$1;
   `,
+
+  updateCaseStatusQuery: `
+    UPDATE cases
+      SET is_case_open=$2
+    WHERE id=$1;
+  `,
 };

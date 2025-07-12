@@ -20,6 +20,7 @@ import {
   getPatientsByDate,
   patientDetailsById,
   patientsDropdown,
+  updateCaseStatus,
 } from "../services/patient.js";
 
 export type RouteHandler = (req: Request, res: Response) => void;
@@ -253,6 +254,28 @@ router.get(
         dateWisePatients: response,
       });
     } catch (e: any) {
+      console.log(e);
+      res.status(500).send({ error: "Something went wrong!" });
+    }
+  })
+);
+
+router.put(
+  "/update-case-status/:caseId",
+  defineRoute(async (req, res) => {
+    const { caseId } = req.params;
+    const { isCaseOpen } = req.body;
+
+    try {
+      await updateCaseStatus(caseId, isCaseOpen);
+
+      res.status(200).send({
+        message: "Case status updated successfully",
+      });
+    } catch (e: any) {
+      if (e instanceof InvalidCaseId) {
+        res.status(400).send({ error: e.message });
+      }
       console.log(e);
       res.status(500).send({ error: "Something went wrong!" });
     }
