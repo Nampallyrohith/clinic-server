@@ -65,7 +65,14 @@ export const addCaseDetailsOfPatientById = async (
     for (const c of cases) {
       const caseResult = await client.query(
         QUERIES.insertCaseDetailsByPatientIdQuery,
-        [patientId, c.caseType, caseDescription, c.treatmentType, visitType]
+        [
+          patientId,
+          c.caseType,
+          caseDescription,
+          c.treatmentType,
+          visitType,
+          amount,
+        ]
       );
 
       const caseId = caseResult.rows[0].id;
@@ -75,7 +82,6 @@ export const addCaseDetailsOfPatientById = async (
       await addVisitsDetailsOfPatientByCaseId(
         caseId,
         visitDate,
-        amount,
         paymentType,
         paymentStatus
       );
@@ -91,7 +97,6 @@ export const addCaseDetailsOfPatientById = async (
 export const addVisitsDetailsOfPatientByCaseId = async (
   caseId: number,
   visitDate: string,
-  amount: number,
   paymentType: "Online" | "Cash",
   paymentStatus: "paid" | "not-paid"
 ) => {
@@ -106,7 +111,6 @@ export const addVisitsDetailsOfPatientByCaseId = async (
     await client.query(QUERIES.insertVisitDetailsByCaseIdQuery, [
       caseId,
       visitDate,
-      amount,
       paymentType,
       paymentStatus,
     ]);

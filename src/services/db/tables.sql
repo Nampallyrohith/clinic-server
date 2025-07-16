@@ -77,6 +77,7 @@ create table if not exists cases (
     case_description text,
     treatment_type treatment_type_enum,
     visit_type visit_type_enum default 'Clinic',
+    amount_per_visit int,
     is_case_open boolean default TRUE,
     registered_date timestamptz default CURRENT_TIMESTAMP
 );
@@ -85,7 +86,6 @@ create table if not exists visits (
     id VARCHAR(10) primary key,
     case_id VARCHAR(10) references cases(id) on delete cascade,
     visit_date timestamptz,
-    amount int,
     payment_type payment_type_enum,
     payment_status payment_status_enum default 'not-paid'
 );

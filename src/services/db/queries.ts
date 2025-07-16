@@ -55,13 +55,13 @@ export const QUERIES = {
           'caseDescription', c.case_description,
           'treatmentType', c.treatment_type,
           'visitType', c.visit_type,
+          'amountPerVisit', c.amount_per_visit,
           'isCaseOpen', c.is_case_open,
           'caseBookedOn', c.registered_date,
           'visits', (
             SELECT JSON_AGG(
               JSON_BUILD_OBJECT(
                 'visitDate', v.visit_date,
-                'paidAmount', v.amount,
                 'paymentType', v.payment_type,
                 'paymentStatus', v.payment_status
               ) ORDER BY v.visit_date DESC
@@ -94,12 +94,12 @@ export const QUERIES = {
             'caseDescription', c.case_description,
             'treatmentType', c.treatment_type,
             'visitType', c.visit_type,
+            'amountPerVisit', c.amount_per_visit,
             'caseBookedOn', c.registered_date,
             'visits', (
               SELECT JSON_AGG(
                 JSON_BUILD_OBJECT(
                   'visitDate', v.visit_date,
-                  'paidAmount', v.amount,
                   'paymentType', v.payment_type,
                   'paymentStatus', v.payment_status
                 ) ORDER BY v.visit_date DESC
@@ -131,13 +131,13 @@ export const QUERIES = {
   `,
 
   insertCaseDetailsByPatientIdQuery: `
-    INSERT INTO cases (patient_id, case_type, case_description, treatment_type, visit_type)
-    VALUES($1, $2, $3, $4, $5) RETURNING id;
+    INSERT INTO cases (patient_id, case_type, case_description, treatment_type, visit_type, amount_per_visit)
+    VALUES($1, $2, $3, $4, $5, $6) RETURNING id;
   `,
 
   insertVisitDetailsByCaseIdQuery: `
-    INSERT INTO visits (case_id, visit_date, amount, payment_type, payment_status)
-    VALUES ($1, $2, $3, $4, $5);
+    INSERT INTO visits (case_id, visit_date, payment_type, payment_status)
+    VALUES ($1, $2, $3, $4);
   `,
 
   // PUT

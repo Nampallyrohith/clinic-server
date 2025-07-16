@@ -183,7 +183,6 @@ router.post(
       await addVisitsDetailsOfPatientByCaseId(
         Number(caseId),
         visitDetails.visitDate,
-        visitDetails.amount,
         visitDetails.paymentType,
         visitDetails.paymentStatus
       );
