@@ -95,7 +95,7 @@ export const addCaseDetailsOfPatientById = async (
 };
 
 export const addVisitsDetailsOfPatientByCaseId = async (
-  caseId: number,
+  caseId: string,
   visitDate: string,
   paymentType: "Online" | "Cash",
   paymentStatus: "paid" | "not-paid"

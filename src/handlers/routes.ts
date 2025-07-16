@@ -181,7 +181,7 @@ router.post(
     const visitDetails = visitDetailsBody.parse(req.body);
     try {
       await addVisitsDetailsOfPatientByCaseId(
-        Number(caseId),
+        caseId,
         visitDetails.visitDate,
         visitDetails.paymentType,
         visitDetails.paymentStatus
