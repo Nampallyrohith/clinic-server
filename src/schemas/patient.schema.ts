@@ -20,7 +20,9 @@ export const caseDetailsBody = visitDetailsBody.extend({
   cases: z.array(
     z.object({
       caseType: z.string().trim().min(1),
-      treatmentType: z.string().trim().min(1),
+      treatmentsGiven: z
+        .array(z.string().min(1))
+        .min(1, "At least one treatment is required"),
     })
   ),
   caseDescription: z.string().trim().min(1),

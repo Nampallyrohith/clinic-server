@@ -75,11 +75,16 @@ create table if not exists cases (
     patient_id varchar(10) references patients(id) on delete cascade,
     case_type case_type_enum,
     case_description text,
-    treatment_type treatment_type_enum,
     visit_type visit_type_enum default 'Clinic',
     amount_per_visit int,
     is_case_open boolean default TRUE,
     registered_date timestamptz default CURRENT_TIMESTAMP
+);
+
+create table if not exists case_treatments (
+  id SERIAL PRIMARY KEY,
+  case_id INTEGER REFERENCES cases(id) ON DELETE CASCADE,
+  treatment_type treatment_type_enum NOT NULL
 );
 
 create table if not exists visits (

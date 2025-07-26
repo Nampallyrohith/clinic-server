@@ -41,7 +41,7 @@ export const addCaseDetailsOfPatientById = async (
   patientId: string,
   cases: {
     caseType: string;
-    treatmentType: string;
+    treatmentsGiven: string[];
   }[],
   caseDescription: string,
   visitDate: string,
@@ -65,19 +65,19 @@ export const addCaseDetailsOfPatientById = async (
     for (const c of cases) {
       const caseResult = await client.query(
         QUERIES.insertCaseDetailsByPatientIdQuery,
-        [
-          patientId,
-          c.caseType,
-          caseDescription,
-          c.treatmentType,
-          visitType,
-          amount,
-        ]
+        [patientId, c.caseType, caseDescription, visitType, amount]
       );
 
       const caseId = caseResult.rows[0].id;
 
       await client.query("COMMIT");
+
+      for (const treatmentType of c.treatmentsGiven) {
+        await client.query(QUERIES.insertCaseTreatmentByCaseIdQuery, [
+          caseId,
+          treatmentType,
+        ]);
+      }
 
       await addVisitsDetailsOfPatientByCaseId(
         caseId,

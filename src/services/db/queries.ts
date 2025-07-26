@@ -53,7 +53,11 @@ export const QUERIES = {
           'caseId', c.id,
           'caseType', c.case_type,
           'caseDescription', c.case_description,
-          'treatmentType', c.treatment_type,
+          'treatmentsGiven', (
+            SELECT ARRAY_AGG(ct.treatment_type)
+            FROM case_treatments ct
+            WHERE ct.case_id = c.id
+          ),
           'visitType', c.visit_type,
           'amountPerVisit', c.amount_per_visit,
           'isCaseOpen', c.is_case_open,
@@ -92,7 +96,11 @@ export const QUERIES = {
           JSON_BUILD_OBJECT(
             'caseType', c.case_type,
             'caseDescription', c.case_description,
-            'treatmentType', c.treatment_type,
+            'treatmentsGiven', (
+              SELECT ARRAY_AGG(ct.treatment_type)
+              FROM case_treatments ct
+              WHERE ct.case_id = c.id
+            ),
             'visitType', c.visit_type,
             'amountPerVisit', c.amount_per_visit,
             'caseBookedOn', c.registered_date,
@@ -119,6 +127,7 @@ export const QUERIES = {
       )
       GROUP BY p.id;
   `,
+
   // POST
   insertAdminQuery: `
     INSERT INTO admin (user_name, email, password) 
@@ -131,8 +140,13 @@ export const QUERIES = {
   `,
 
   insertCaseDetailsByPatientIdQuery: `
-    INSERT INTO cases (patient_id, case_type, case_description, treatment_type, visit_type, amount_per_visit)
-    VALUES($1, $2, $3, $4, $5, $6) RETURNING id;
+    INSERT INTO cases (patient_id, case_type, case_description, visit_type, amount_per_visit)
+    VALUES($1, $2, $3, $4, $5) RETURNING id;
+  `,
+
+  insertCaseTreatmentByCaseIdQuery: `
+    INSERT INTO case_treatments (case_id, treatment_type)
+    VALUES ($1, $2);
   `,
 
   insertVisitDetailsByCaseIdQuery: `
