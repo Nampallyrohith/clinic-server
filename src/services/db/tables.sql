@@ -48,6 +48,8 @@ create type treatment_type_enum as enum (
     'passive_movements'
 );
 
+create type payment_category_enum as enum ('general', 'package');
+
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
@@ -77,6 +79,7 @@ create table if not exists cases (
     case_description text,
     visit_type visit_type_enum default 'Clinic',
     amount_per_visit int,
+    payment_category payment_category_enum,
     is_case_open boolean default TRUE,
     registered_date timestamptz default CURRENT_TIMESTAMP
 );
