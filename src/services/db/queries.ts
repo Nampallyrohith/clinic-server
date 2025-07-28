@@ -128,6 +128,64 @@ export const QUERIES = {
       GROUP BY p.id;
   `,
 
+  fetchPatientGenderChartDataQuery: `
+    select patient_gender as "patientGender",
+           count(*) as total
+    from patients
+    group by patient_gender;
+  `,
+
+  fetchCaseTypeChartDataQuery: `
+    select case_type as caseType, count(*) as total from cases group by case_type;
+  `,
+
+  fetchVisitsPerMonthChartDataQuery: `
+      select DATE_TRUNC('month', visit_date) as month, count(*) as total
+      from visits
+      group by month
+      order by month;
+  `,
+
+  fetchRevenuePerMonthChartDataQuery: `
+      select DATE_TRUNC('month', registered_date) as month, sum(amount_per_visit) as revenue
+      from cases
+      group by month
+      order by month;
+  `,
+
+  fetchPaymentStatusChartDataQuery: `
+      select payment_status as "paymentStatus", count(*) from visits group by payment_status;
+  `,
+
+  fetchAgeDistributionChartDataQuery: `
+    select 
+      case 
+        when age < 18 then '0-17'
+        when age between 18 and 35 then '15-35'
+        when age between 36 and 60 then '36-60'
+        else '60+'
+      end as "ageGroup",
+      count(*) as total
+
+      from (
+      select extract(year from age(current_date, patient_dob)) as age 
+      from patients
+      ) as age_data
+       group by "ageGroup";
+  `,
+
+  fetchPatientStatsQuery: `
+      SELECT
+        (SELECT COUNT(*) FROM patients) AS "totalPatients",
+        
+        COALESCE(SUM(CASE WHEN v.payment_status = 'paid' THEN c.amount_per_visit ELSE 0 END), 0) AS "totalAmountReceived",
+
+        COALESCE(SUM(CASE WHEN v.payment_status = 'not-paid' THEN c.amount_per_visit ELSE 0 END), 0) AS "totalAmountPending"
+
+    FROM visits v
+    JOIN cases c ON v.case_id = c.id;
+  `,
+
   // POST
   insertAdminQuery: `
     INSERT INTO admin (user_name, email, password) 

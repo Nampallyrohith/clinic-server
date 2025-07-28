@@ -1,6 +1,11 @@
 import { Request, Response, Router } from "express";
 import { authBody, changePasswordBody } from "../schemas/admin.schema.js";
-import { changePassword, getProfile, login } from "../services/admin.js";
+import {
+  changePassword,
+  chartsData,
+  getProfile,
+  login,
+} from "../services/admin.js";
 import { generateWebToken } from "../services/utils/lib.js";
 import {
   InvalidCaseId,
@@ -275,6 +280,22 @@ router.put(
       if (e instanceof InvalidCaseId) {
         res.status(400).send({ error: e.message });
       }
+      console.log(e);
+      res.status(500).send({ error: "Something went wrong!" });
+    }
+  })
+);
+
+router.get(
+  "/charts-data",
+  defineRoute(async (req, res) => {
+    try {
+      const response = await chartsData();
+      res.status(200).send({
+        message: "Charts data successfully retrieved",
+        statsChartsData: response,
+      });
+    } catch (e) {
       console.log(e);
       res.status(500).send({ error: "Something went wrong!" });
     }

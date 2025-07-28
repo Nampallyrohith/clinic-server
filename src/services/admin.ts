@@ -81,3 +81,42 @@ export const getProfile = async (adminId: string) => {
     throw e;
   }
 };
+
+export const chartsData = async () => {
+  try {
+    const patientsGenderData = (
+      await client.query(QUERIES.fetchPatientGenderChartDataQuery)
+    ).rows;
+    const caseTypesData = (
+      await client.query(QUERIES.fetchCaseTypeChartDataQuery)
+    ).rows;
+    const visitPerMonthsData = (
+      await client.query(QUERIES.fetchVisitsPerMonthChartDataQuery)
+    ).rows;
+    const revenuePerMonthsData = (
+      await client.query(QUERIES.fetchRevenuePerMonthChartDataQuery)
+    ).rows;
+    const paymentsStatusData = (
+      await client.query(QUERIES.fetchPaymentStatusChartDataQuery)
+    ).rows;
+    const ageGroupData = (
+      await client.query(QUERIES.fetchAgeDistributionChartDataQuery)
+    ).rows;
+
+    const stats = (await client.query(QUERIES.fetchPatientStatsQuery)).rows[0];
+
+    return {
+      chartsData: {
+        patientsGenderData,
+        caseTypesData,
+        visitPerMonthsData,
+        revenuePerMonthsData,
+        paymentsStatusData,
+        ageGroupData,
+      },
+      stats,
+    };
+  } catch (e) {
+    throw e;
+  }
+};
