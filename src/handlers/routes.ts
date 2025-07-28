@@ -293,7 +293,7 @@ router.get(
       const response = await chartsData();
       res.status(200).send({
         message: "Charts data successfully retrieved",
-        chartsData: response,
+        statsChartsData: response,
       });
     } catch (e) {
       console.log(e);

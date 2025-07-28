@@ -174,6 +174,18 @@ export const QUERIES = {
        group by "ageGroup";
   `,
 
+  fetchPatientStatsQuery: `
+      SELECT
+        (SELECT COUNT(*) FROM patients) AS "totalPatients",
+        
+        COALESCE(SUM(CASE WHEN v.payment_status = 'paid' THEN c.amount_per_visit ELSE 0 END), 0) AS "totalAmountReceived",
+
+        COALESCE(SUM(CASE WHEN v.payment_status = 'not-paid' THEN c.amount_per_visit ELSE 0 END), 0) AS "totalAmountPending"
+
+    FROM visits v
+    JOIN cases c ON v.case_id = c.id;
+  `,
+
   // POST
   insertAdminQuery: `
     INSERT INTO admin (user_name, email, password) 

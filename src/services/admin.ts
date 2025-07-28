@@ -103,13 +103,18 @@ export const chartsData = async () => {
       await client.query(QUERIES.fetchAgeDistributionChartDataQuery)
     ).rows;
 
+    const stats = (await client.query(QUERIES.fetchPatientStatsQuery)).rows[0];
+
     return {
-      patientsGenderData,
-      caseTypesData,
-      visitPerMonthsData,
-      revenuePerMonthsData,
-      paymentsStatusData,
-      ageGroupData,
+      chartsData: {
+        patientsGenderData,
+        caseTypesData,
+        visitPerMonthsData,
+        revenuePerMonthsData,
+        paymentsStatusData,
+        ageGroupData,
+      },
+      stats,
     };
   } catch (e) {
     throw e;
