@@ -151,6 +151,27 @@ export const getPatientsByDate = async (date: string) => {
   }
 };
 
+export const getOpenCasesByPatientId = async (patientId: string) => {
+  try {
+    const isPatientExists = await client.query(
+      QUERIES.checkPatientExistsByIdQuery,
+      [patientId]
+    );
+
+    if (!isPatientExists.rows[0].exists) {
+      throw new InvalidPatientId("Invalid Patient Id");
+    }
+
+    const result = (
+      await client.query(QUERIES.fetchOpenCasesByPatientIdQuery, [patientId])
+    ).rows;
+
+    return result;
+  } catch (e) {
+    throw e;
+  }
+};
+
 export const updateCaseStatus = async (caseId: string, isCaseOpen: boolean) => {
   try {
     const isCaseExists = await client.query(

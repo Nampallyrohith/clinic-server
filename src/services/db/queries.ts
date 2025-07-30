@@ -189,6 +189,16 @@ export const QUERIES = {
     JOIN cases c ON v.case_id = c.id;
   `,
 
+  fetchOpenCasesByPatientIdQuery: `
+    SELECT
+      c.id AS "caseId",
+      c.case_type AS "caseType",
+      c.visit_type AS "visitType",
+      c.registered_date AS "caseBookedOn"
+    FROM cases c
+    WHERE c.patient_id = $1 AND c.is_case_open = true;
+  `,
+
   // POST
   insertAdminQuery: `
     INSERT INTO admin (user_name, email, password) 
