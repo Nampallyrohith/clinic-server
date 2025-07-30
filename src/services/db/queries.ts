@@ -140,20 +140,21 @@ export const QUERIES = {
   `,
 
   fetchVisitsPerMonthChartDataQuery: `
-      select DATE_TRUNC('month', visit_date) as month, count(*) as total
+      select to_char(visit_date, 'DD Mon') as "dayMonth", 
+             count(*) as total
       from visits
-      group by month
-      order by month;
+      group by visit_date
+      order by visit_date;
   `,
 
   fetchRevenuePerMonthChartDataQuery: `
       select
-        DATE_TRUNC('month', registered_date) as month,
+        to_char(registered_date, 'DD Mon') as "dayMonth",
         COALESCE(SUM(CASE WHEN v.payment_status = 'paid' THEN c.amount_per_visit ELSE 0 END), 0) AS "revenue"
       from cases c 
       join visits v on c.id = v.case_id
-      group by month
-      order by month;
+      group by registered_date
+      order by registered_date;
   `,
 
   fetchPaymentStatusChartDataQuery: `
