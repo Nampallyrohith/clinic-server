@@ -36,3 +36,18 @@ export const addNewPatientBody = patientBody.extend({
 });
 
 export type AddPatientSchema = z.infer<typeof addNewPatientBody>;
+
+export const EditPatientBody = z.object({
+  patientName: z.string().trim().min(1),
+  patientGender: z.enum(["Male", "Female", "Others"]),
+  patientDOB: z
+    .string()
+    .trim()
+    .min(1, { message: "Date of Birth is required" }),
+  mobile: z
+    .string()
+    .regex(/^\d{10}$/, "Mobile number must be exactly 10 digits"),
+  patientAddress: z.string().trim().min(1),
+});
+
+export type EditPatientSchema = z.infer<typeof EditPatientBody>;

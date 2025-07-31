@@ -16,6 +16,7 @@ import {
 import {
   addNewPatientBody,
   caseDetailsBody,
+  EditPatientBody,
   visitDetailsBody,
 } from "../schemas/patient.schema.js";
 import {
@@ -27,6 +28,7 @@ import {
   patientDetailsById,
   patientsDropdown,
   updateCaseStatus,
+  updatePatientDetails,
 } from "../services/patient.js";
 
 export type RouteHandler = (req: Request, res: Response) => void;
@@ -313,6 +315,28 @@ router.get(
       res.status(200).send({
         message: "Open cases by patient retreived successfully",
         openCases: response,
+      });
+    } catch (e: any) {
+      if (e instanceof InvalidPatientId) {
+        res.status(400).send({ error: e.message });
+      }
+      console.log(e);
+      res.status(500).send({ error: "Something went wrong!" });
+    }
+  })
+);
+
+router.put(
+  "/update-patient-details/:patientId",
+  defineRoute(async (req, res) => {
+    const { patientId } = req.params;
+    const editPatientDetails = EditPatientBody.parse(req.body);
+
+    try {
+      await updatePatientDetails(patientId, editPatientDetails);
+
+      res.status(200).send({
+        message: "Patient details updated successfully",
       });
     } catch (e: any) {
       if (e instanceof InvalidPatientId) {

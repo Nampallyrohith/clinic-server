@@ -42,7 +42,7 @@ export const QUERIES = {
     SELECT 
       p.id as "patientId",
       p.patient_name as "patientName",
-      p.patient_dob as "patientDOB",
+      TO_CHAR(p.patient_dob, 'YYYY-MM-DD') as "patientDOB",
       p.mobile as "mobileNo",
       p.patient_gender as "patientGender",
       p.patient_address as "patientAddress",
@@ -86,7 +86,7 @@ export const QUERIES = {
     SELECT 
         p.id AS "patientId",
         p.patient_name AS "patientName",
-        p.patient_dob AS "patientDOB",
+        TO_CHAR(p.patient_dob, 'YYYY-MM-DD') as "patientDOB",
         p.mobile AS "mobileNo",
         p.patient_gender AS "patientGender",
         p.patient_address AS "patientAddress",
@@ -242,6 +242,17 @@ export const QUERIES = {
   updateCaseStatusQuery: `
     UPDATE cases
       SET is_case_open=$2
+    WHERE id=$1;
+  `,
+
+  updatePatientDetailsQuery: `
+    UPDATE patients
+      SET
+        patient_name=$2,
+        patient_gender=$3,
+        patient_dob=$4,
+        mobile=$5,
+        patient_address=$6
     WHERE id=$1;
   `,
 };

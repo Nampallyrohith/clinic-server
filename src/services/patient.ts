@@ -1,4 +1,7 @@
-import { AddPatientSchema } from "../schemas/patient.schema.js";
+import {
+  AddPatientSchema,
+  EditPatientSchema,
+} from "../schemas/patient.schema.js";
 import { client } from "./db/client.js";
 import { QUERIES } from "./db/queries.js";
 import { InvalidCaseId, InvalidPatientId } from "./error.js";
@@ -184,6 +187,33 @@ export const updateCaseStatus = async (caseId: string, isCaseOpen: boolean) => {
     }
 
     await client.query(QUERIES.updateCaseStatusQuery, [caseId, isCaseOpen]);
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const updatePatientDetails = async (
+  patientId: string,
+  patientDetails: EditPatientSchema
+) => {
+  try {
+    const isPatientExists = await client.query(
+      QUERIES.checkPatientExistsByIdQuery,
+      [patientId]
+    );
+
+    if (!isPatientExists.rows[0].exists) {
+      throw new InvalidPatientId("Invalid Patient Id");
+    }
+
+    await client.query(QUERIES.updatePatientDetailsQuery, [
+      patientId,
+      patientDetails.patientName,
+      patientDetails.patientGender,
+      patientDetails.patientDOB,
+      patientDetails.mobile,
+      patientDetails.patientAddress,
+    ]);
   } catch (e) {
     throw e;
   }
