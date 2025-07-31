@@ -16,7 +16,7 @@ import {
 import {
   addNewPatientBody,
   caseDetailsBody,
-  EditPatientBody,
+  patientBody,
   visitDetailsBody,
 } from "../schemas/patient.schema.js";
 import {
@@ -330,7 +330,7 @@ router.put(
   "/update-patient-details/:patientId",
   defineRoute(async (req, res) => {
     const { patientId } = req.params;
-    const editPatientDetails = EditPatientBody.parse(req.body);
+    const editPatientDetails = patientBody.parse(req.body);
 
     try {
       await updatePatientDetails(patientId, editPatientDetails);
