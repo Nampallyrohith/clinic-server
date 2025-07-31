@@ -29,6 +29,7 @@ import {
   patientsDropdown,
   updateCaseStatus,
   updatePatientDetails,
+  updateVisitDetailsById,
 } from "../services/patient.js";
 
 export type RouteHandler = (req: Request, res: Response) => void;
@@ -340,6 +341,28 @@ router.put(
       });
     } catch (e: any) {
       if (e instanceof InvalidPatientId) {
+        res.status(400).send({ error: e.message });
+      }
+      console.log(e);
+      res.status(500).send({ error: "Something went wrong!" });
+    }
+  })
+);
+
+router.put(
+  "/update-visit-details/:visitId",
+  defineRoute(async (req, res) => {
+    const { visitId } = req.params;
+    const visitDetails = visitDetailsBody.parse(req.body);
+
+    try {
+      await updateVisitDetailsById(visitId, visitDetails);
+
+      res.status(200).send({
+        message: "Visit details updated successfully",
+      });
+    } catch (e: any) {
+      if (e instanceof InvalidCaseId) {
         res.status(400).send({ error: e.message });
       }
       console.log(e);

@@ -37,3 +37,4 @@ export const addNewPatientBody = patientBody.extend({
 
 export type AddPatientSchema = z.infer<typeof addNewPatientBody>;
 export type EditPatientSchema = z.infer<typeof patientBody>;
+export type EditVisitSchema = z.infer<typeof visitDetailsBody>;

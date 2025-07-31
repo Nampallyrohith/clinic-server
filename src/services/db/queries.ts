@@ -31,6 +31,12 @@ export const QUERIES = {
     );
   `,
 
+  checkVisitExistsByIdQuery: `
+    SELECT EXISTS (
+      SELECT 1 FROM visits WHERE id=$1
+    );
+  `,
+
   fetchPatientsDropdownQuery: `
     SELECT id AS "patientId", 
            patient_name AS "patientName",
@@ -46,8 +52,19 @@ export const QUERIES = {
       p.mobile as "mobileNo",
       p.patient_gender as "patientGender",
       p.patient_address as "patientAddress",
-      p.created_at as "firstVisitOn",
-
+      (
+        SELECT MIN(v.visit_date)
+        FROM visits v
+        JOIN cases c2 ON c2.id = v.case_id
+        WHERE c2.patient_id = p.id
+      ) AS "firstVisitOn",
+      (
+        SELECT MAX(v.visit_date)
+        FROM visits v
+        JOIN cases c2 ON c2.id = v.case_id
+        WHERE c2.patient_id = p.id
+      ) AS "lastVisitOn",
+      
       JSON_AGG(
         JSON_BUILD_OBJECT(
           'caseId', c.id,
@@ -65,6 +82,7 @@ export const QUERIES = {
           'visits', (
             SELECT JSON_AGG(
               JSON_BUILD_OBJECT(
+                'visitId', v.id,
                 'visitDate', v.visit_date,
                 'paymentType', v.payment_type,
                 'paymentStatus', v.payment_status
@@ -90,7 +108,6 @@ export const QUERIES = {
         p.mobile AS "mobileNo",
         p.patient_gender AS "patientGender",
         p.patient_address AS "patientAddress",
-        p.created_at AS "firstVisitOn",
 
         JSON_AGG(
           JSON_BUILD_OBJECT(
@@ -107,6 +124,7 @@ export const QUERIES = {
             'visits', (
               SELECT JSON_AGG(
                 JSON_BUILD_OBJECT(
+                  'visitId', v.id,
                   'visitDate', v.visit_date,
                   'paymentType', v.payment_type,
                   'paymentStatus', v.payment_status
@@ -254,6 +272,15 @@ export const QUERIES = {
         patient_dob=$4,
         mobile=$5,
         patient_address=$6
+    WHERE id=$1;
+  `,
+
+  updateVisitDetailsByIdQuery: `
+    UPDATE visits
+      SET
+        visit_date=$2,
+        payment_type=$3,
+        payment_status=$4
     WHERE id=$1;
   `,
 };

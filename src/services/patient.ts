@@ -1,6 +1,7 @@
 import {
   AddPatientSchema,
   EditPatientSchema,
+  EditVisitSchema,
 } from "../schemas/patient.schema.js";
 import { client } from "./db/client.js";
 import { QUERIES } from "./db/queries.js";
@@ -213,6 +214,31 @@ export const updatePatientDetails = async (
       patientDetails.patientDOB,
       patientDetails.mobile,
       patientDetails.patientAddress,
+    ]);
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const updateVisitDetailsById = async (
+  visitId: string,
+  visitDetails: EditVisitSchema
+) => {
+  try {
+    const isVisitExists = await client.query(
+      QUERIES.checkVisitExistsByIdQuery,
+      [visitId]
+    );
+
+    if (!isVisitExists.rows[0].exists) {
+      throw new InvalidCaseId("Invalid Visit Id");
+    }
+
+    await client.query(QUERIES.updateVisitDetailsByIdQuery, [
+      visitId,
+      visitDetails.visitDate,
+      visitDetails.paymentType,
+      visitDetails.paymentStatus,
     ]);
   } catch (e) {
     throw e;
