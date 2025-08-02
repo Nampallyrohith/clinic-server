@@ -171,7 +171,6 @@ export const QUERIES = {
       COALESCE(SUM(CASE WHEN v.payment_status = 'paid' THEN c.amount_per_visit ELSE 0 END), 0) AS "revenue"
     FROM cases c
     JOIN visits v ON c.id = v.case_id
-    WHERE DATE_TRUNC('month', v.visit_date) = DATE_TRUNC('month', CURRENT_DATE)
     GROUP BY v.visit_date::date
     ORDER BY v.visit_date::date;
   `,
